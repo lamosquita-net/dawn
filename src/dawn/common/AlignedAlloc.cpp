@@ -49,6 +49,10 @@ void* AlignedAlloc(size_t size, size_t alignment) {
     // instead.
     return memalign(alignment, size);
 
+#elif defined(__APPLE__)
+    // FlyWeb B1b: aligned_alloc is macOS 10.15+.
+    void* ptr = nullptr;
+    return posix_memalign(&ptr, alignment, size) == 0 ? ptr : nullptr;
 #else
     return aligned_alloc(alignment, size);
 
